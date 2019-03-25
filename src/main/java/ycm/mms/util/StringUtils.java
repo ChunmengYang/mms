@@ -10,7 +10,22 @@ import org.apache.commons.lang3.RandomStringUtils;
  * @author Chunmeng
  */
 public abstract class StringUtils {
-	
+	/**
+     * 判断是否为允许的上传文件类型,true表示允许
+     */
+	public static boolean checkImageFileSuffix(String fileName) {
+        //设置允许上传文件类型
+        String suffixList = "jpg,png,jpeg";
+        // 获取文件后缀
+        String suffix = fileName.substring(fileName.lastIndexOf(".")
+                + 1, fileName.length());
+        if (suffixList.contains(suffix.trim().toLowerCase())) {
+            return true;
+        }
+        return false;
+    }
+
+
 	/**
 	* 获取url中的参数
 	* @param url

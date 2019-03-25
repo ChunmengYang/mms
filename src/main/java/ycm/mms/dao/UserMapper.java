@@ -8,6 +8,8 @@ public interface UserMapper {
    
    int update(User user);
    
+   int updateIcon(User user);
+   
    int verify(int id);
    
    User query(int id);

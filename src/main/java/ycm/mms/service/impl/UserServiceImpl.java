@@ -57,10 +57,33 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 	
+	@Transactional
+	@Override
+	public boolean updateUserIcon(int id, String iconPath) {
+		// TODO Auto-generated method stub
+		User user = userMapper.query(id);
+		if (user != null) {
+			
+			user.setIconPath(iconPath);
+			
+			int status = userMapper.updateIcon(user);
+			if (status == 1) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public User getUser(int id) {
 		// TODO Auto-generated method stub
 		return userMapper.query(id);
 	}
-	
+
+	@Override
+	public User getUserByAccountId(int accountId) {
+		// TODO Auto-generated method stub
+		return userMapper.queryByAccountId(accountId);
+	}
 }

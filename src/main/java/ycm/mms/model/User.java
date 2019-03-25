@@ -12,6 +12,7 @@ public class User {
     private int accountId;
     private String userName;
     private String nickName;
+    private String iconPath;
     private int sex;
     private Timestamp createTime;
     private Timestamp modifyTime;
@@ -62,6 +63,12 @@ public class User {
 	}
 	public void setAccountId(int accountId) {
 		this.accountId = accountId;
+	}
+	public String getIconPath() {
+		return iconPath;
+	}
+	public void setIconPath(String iconPath) {
+		this.iconPath = iconPath;
 	}
     
 }

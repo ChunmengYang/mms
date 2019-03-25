@@ -44,6 +44,7 @@ CREATE TABLE `user` (
   `account_id` int(11) NOT NULL,
   `user_name` varchar(128) NOT NULL DEFAULT '' COMMENT '用户姓名',
   `nick_name` varchar(128) DEFAULT '' COMMENT '用户昵称',
+  `icon_path` varchar(128) DEFAULT '' COMMENT '头像路径',
   `sex` int(2) unsigned  DEFAULT '0' COMMENT '0：未知； 1：男；2：女',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
