@@ -9,6 +9,10 @@ public interface AccountService {
 	boolean verifyAccount(String account);
 	
 	boolean register(Account account, User user);
+	
 	Session login(String account, String password);
+	
 	boolean logout(int accountId);
+	
+	Session checkSession(String sign);
 }

@@ -11,10 +11,6 @@
      http://www.springframework.org/schema/tx 
      http://www.springframework.org/schema/tx/spring-tx.xsd">
 	
-	
-	<!-- 启用spring-mvc注解 -->
-    <context:annotation-config />
-    
 	<!-- 启用spring注解 -->
     <context:annotation-config />
     

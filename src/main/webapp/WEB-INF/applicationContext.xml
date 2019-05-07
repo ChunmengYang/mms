@@ -14,10 +14,6 @@
 	<!-- 启用spring注解 -->
     <context:annotation-config />
     
-    <!-- 设置使用注解的类所在的jar包, 自动扫描实现自动注入 -->
-    <context:component-scan base-package="ycm.mms.service.impl" />
-    
-    <!-- 启用对AOP的支持 -->
-	<aop:aspectj-autoproxy />
-	<context:component-scan base-package="ycm.mms.aop" />
+    <import resource="classpath:spring-mybatis.xml"/>
+    <import resource="classpath:spring.xml"/>
 </beans>

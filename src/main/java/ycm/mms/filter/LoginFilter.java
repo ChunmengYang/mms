@@ -1,6 +1,8 @@
 package ycm.mms.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -10,14 +12,19 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ycm.mms.util.StringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import ycm.mms.model.Session;
+import ycm.mms.service.AccountService;
 
 /**
  * Servlet Filter implementation class LoginFilter
  */
 public class LoginFilter implements Filter {
-
-    /**
+	/**
      * Default constructor. 
      */
     public LoginFilter() {
@@ -40,9 +47,10 @@ public class LoginFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String path = request.getRequestURI();
-		if (path.indexOf("/account") != -1 || 
-			path.indexOf("/register.jsp") != -1 || 
-			path.indexOf("/login.jsp") != -1 || 
+		if (path.indexOf(".jsp") != -1 || 
+			path.indexOf("/account/verify") != -1 || 
+			path.indexOf("/account/register") != -1 || 
+			path.indexOf("/account/login") != -1 || 
 			path.indexOf("/js/") != -1 || 
 			path.indexOf("/css/") != -1 || 
 			path.indexOf("/images/") != -1) {
@@ -52,20 +60,35 @@ public class LoginFilter implements Filter {
 			return;
 		}
 		
-		Object session = request.getSession().getAttribute("session");
-		if (session == null) {
-			String redirectPath = StringUtils.concat(request.getScheme(),
-					"://",
-					request.getServerName(),
-					":",
-					String.valueOf(request.getServerPort()),
-					request.getContextPath(),
-					"/login.jsp");
-			response.sendRedirect(redirectPath);
-			return;
+		// 无论是GET还是POST，获取参数的方法是相同的。
+		String sign = request.getParameter("session");
+		if (sign != null && !"".equals(sign)) {
+			ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
+			AccountService accountService = (AccountService)appContext.getBean("accountService");
+			
+			Session session = accountService.checkSession(sign);
+			if (session != null) {
+				request.getSession().setAttribute("session", session);
+				
+				chain.doFilter(servletRequest, servletResponse);
+				return;
+			}
 		}
 		
-		chain.doFilter(servletRequest, servletResponse);
+		response.setCharacterEncoding("UTF-8");  
+	    response.setContentType("application/json; charset=utf-8");
+	    PrintWriter out = null;  
+	    try {  
+	        out = response.getWriter();  
+	        out.append("{error: \"Invalid session.\"}");
+	    } catch (IOException e) {  
+	        e.printStackTrace();
+	        response.sendError(500);
+	    } finally {  
+	        if (out != null) {
+	            out.close();  
+	        }
+	    }
 		return;
 	}
 

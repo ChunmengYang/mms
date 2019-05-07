@@ -4,13 +4,6 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-
-	Object msgObj = request.getSession().getAttribute("error");
-	String msg = "";
-	if (msgObj != null) {
-		request.getSession().removeAttribute("error");
-		msg = msgObj.toString();
-	}
 %>
 <html>
 <head>
@@ -37,7 +30,6 @@
 	    <input type="password" name="password">
 	</div>
 	<div class="row">
-		<p class="error"><%=msg %></p>
 	    <button type="submit">注册</button>
 	</div>
 	</form>

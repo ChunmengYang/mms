@@ -5,13 +5,6 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-
-	Object msgObj = request.getSession().getAttribute("error");
-	String msg = "";
-	if (msgObj != null) {
-		request.getSession().removeAttribute("error");
-		msg = msgObj.toString();
-	}
 %>
 <html>
 <head>
@@ -54,7 +47,6 @@
 	    <input type="password" name="dis-password" id="dis-password">
 	</div>
 	<div class="row">
-		<p class="error"><%=msg %></p>
 		<form action="account/login" method="post" onsubmit="return formSubmit()">
 			<input id="encryp_data" name="encryp_data" type="hidden" value="" >
 	    	<button type="submit">登录</button>

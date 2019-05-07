@@ -71,3 +71,4 @@ CREATE TABLE `session` (
 SET FOREIGN_KEY_CHECKS = 1;
 
 ALTER TABLE `mms`.`session` ADD UNIQUE INDEX `idx_session_acount_id`(`account_id`);
+ALTER TABLE `mms`.`session` ADD UNIQUE INDEX `idx_session_sign`(`sign`);

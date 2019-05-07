@@ -26,6 +26,7 @@ public class AccountServiceImpl implements AccountService {
 	public AccountMapper getAccountMapper() {
 		return accountMapper;
 	}
+	
 	@Autowired
 	public void setAccountMapper(AccountMapper accountMapper) {
 		this.accountMapper = accountMapper;
@@ -34,6 +35,7 @@ public class AccountServiceImpl implements AccountService {
 	public UserMapper getUserMapper() {
 		return userMapper;
 	}
+	
 	@Autowired
 	public void setUserMapper(UserMapper userMapper) {
 		this.userMapper = userMapper;
@@ -42,6 +44,7 @@ public class AccountServiceImpl implements AccountService {
 	public SessionMapper getSessionMapper() {
 		return sessionMapper;
 	}
+	
 	@Autowired
 	public void setSessionMapper(SessionMapper sessionMapper) {
 		this.sessionMapper = sessionMapper;
@@ -119,6 +122,23 @@ public class AccountServiceImpl implements AccountService {
 				if (status != 0) {
 					return session;
 				}
+			}
+		}
+		return null;
+	}
+	
+	@Transactional
+	@Override
+	public Session checkSession(String sign) {
+		Session session = sessionMapper.queryBySign(sign);
+		if (session != null && session.getId() != 0) {
+			long nowDate = new java.util.Date().getTime();
+			Timestamp expiredTime = new Timestamp(nowDate + 86400000);
+			
+			session.setExpiredTime(expiredTime);
+			int status = sessionMapper.update(session);
+			if (status != 0) {
+				return session;
 			}
 		}
 		return null;

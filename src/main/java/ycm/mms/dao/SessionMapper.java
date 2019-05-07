@@ -10,4 +10,6 @@ public interface SessionMapper {
    int delete(int accountId);
    
    Session queryByAccountId(int accountId);
+   
+   Session queryBySign(String sign);
 }

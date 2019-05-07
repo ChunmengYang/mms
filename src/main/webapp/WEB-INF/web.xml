@@ -26,13 +26,7 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
-    
-    <!-- 配置文件所在位置 -->
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:spring.xml,classpath:mybatis-spring.xml</param-value>
-    </context-param>
-    <!-- Spring配置（监听器） -->
+    <!-- Spring配置(监听器) -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>

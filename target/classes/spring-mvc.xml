@@ -23,6 +23,7 @@
 	
     <!-- 启用spring-mvc注解 -->
     <context:annotation-config />
+    
     <!-- 设置使用注解的类所在的jar包，自动扫描实现自动注入 -->
     <context:component-scan base-package="ycm.mms.controller" />
 
