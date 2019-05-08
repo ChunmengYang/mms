@@ -23,7 +23,7 @@
 </head>
 <body>
 <div class="container">
-	<img src="user/icon/download" />
+	<img src="user/icon/download?session=zutM4HuDH3httArf3EdSv95fwfZzc4wa" />
 </div>
 </body>
 </html>

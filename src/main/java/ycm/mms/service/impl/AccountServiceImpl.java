@@ -81,13 +81,14 @@ public class AccountServiceImpl implements AccountService {
 			
 			if (userId != 0) {
 				return true;
+			} else {
+				// 抛出异常，事物回滚
+				throw new RuntimeException("Insert user failed.");
 			}
 		}
-		
 		return false;
 	}
 	
-	@Transactional
 	@Override
 	public Session login(String loginField, String password) {
 		// TODO Auto-generated method stub
@@ -127,7 +128,6 @@ public class AccountServiceImpl implements AccountService {
 		return null;
 	}
 	
-	@Transactional
 	@Override
 	public Session checkSession(String sign) {
 		Session session = sessionMapper.queryBySign(sign);
@@ -144,7 +144,6 @@ public class AccountServiceImpl implements AccountService {
 		return null;
 	}
 	
-	@Transactional
 	@Override
 	public boolean logout(int accountId) {
 		// TODO Auto-generated method stub

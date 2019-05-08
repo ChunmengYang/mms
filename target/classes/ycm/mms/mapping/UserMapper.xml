@@ -7,7 +7,8 @@
 		<result property="accountId" column="account_id"/>
         <result property="userName" column="user_name"/>
         <result property="nickName" column="nick_name"/>
-        <result property="iconPath" column="icon_path"/>
+        <result property="icon" column="icon"/>
+        <result property="iconSuffix" column="icon_suffix"/>
         <result property="sex" column="sex"/>
         <result property="createTime" column="create_time"/>
         <result property="modifyTime" column="modify_time"/>
@@ -26,7 +27,7 @@
     </update>
     
     <update id="updateIcon" parameterType="User">  
-        update user set icon_path = #{iconPath}  where id = #{id}
+        update user set icon = #{icon}, icon_suffix = #{iconSuffix}  where id = #{id}
     </update>
     
     <select id="verify" parameterType="int" resultType="java.lang.Integer" >  

@@ -52,5 +52,5 @@
 	</bean>
 	
 	<!-- 配置异常处理 -->
-	<bean class="ycm.mms.filter.ExceptionHandler" />
+	<bean class="ycm.mms.filter.MaxUploadSizeExceededExceptionHandler" />
 </beans>

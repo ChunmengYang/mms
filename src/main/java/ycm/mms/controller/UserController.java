@@ -1,13 +1,12 @@
 package ycm.mms.controller;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -92,19 +91,20 @@ public class UserController {
         if (session != null && session.getAccountId() > 0) {
         	User user = userService.getUserByAccountId(session.getAccountId());
         	if (user != null && user.getId() > 0) {
-        		String filePath = user.getIconPath();
-        		if (filePath != null && !"".equals(filePath)) {
-        			File file = new File(filePath);
-            		if (file.exists()) {
-            			String filename =  "usericon" + filePath.substring(filePath.lastIndexOf("."), filePath.length());
-                        HttpHeaders headers = new HttpHeaders();
-                        String downloadFileName = new String(filename.getBytes("UTF-8"),"iso-8859-1");
-                        headers.setContentDispositionFormData("attachment", downloadFileName);
-                        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        		byte[] icon = user.getIcon();
+        		String suffix = user.getIconSuffix();
+        		if (icon != null && icon.length > 0) {
+        			if (suffix == null || "".equals(suffix)) {
+        				suffix = "JPG";
+        			}
+        			String filename =  user.getId() + "." + suffix;
+                    HttpHeaders headers = new HttpHeaders();
+                    String downloadFileName = new String(filename.getBytes("UTF-8"),"iso-8859-1");
+                    headers.setContentDispositionFormData("attachment", downloadFileName);
+                    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
-                        //MediaType:互联网媒介类型contentType:具体请求中的媒体类型信息  
-                        return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
-            		}
+                    // MediaType:互联网媒介类型contentType:具体请求中的媒体类型信息  
+                    return new ResponseEntity<byte[]>(icon, headers,HttpStatus.CREATED);
         		}
         	}
         }
@@ -141,20 +141,22 @@ public class UserController {
                     	if (user != null && user.getId() > 0) {
                     		String suffix = fileName.substring(fileName.lastIndexOf(".")
                                     + 1, fileName.length());
-                    		String filePath = "/Users/mash5/Downloads/mmsUpload/" + user.getId() + "." + suffix;
-                            try {
-        						file.transferTo(new File(filePath));
-        						
-        						userService.updateUserIcon(user.getId(), filePath);
-        						result.setSuccess(true);
-        			            return result; 
-        					} catch (IllegalStateException | IOException e) {
-        						// TODO Auto-generated catch block
-        						e.printStackTrace();
-        						
-        						result.setError(e.getMessage());
-        						return result; 
-        					}
+
+    						try {
+								boolean status = userService.updateUserIcon(user.getId(), file.getBytes(), suffix);
+								if (status) {
+									result.setSuccess(true);
+		    			            return result; 
+								} else {
+									result.setError("保存头像失败");
+		                            return result; 
+								}
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								result.setError("保存头像失败");
+	                            return result; 
+							} 
                     	} else {
                     		result.setError("用户未登录");
                             return result; 

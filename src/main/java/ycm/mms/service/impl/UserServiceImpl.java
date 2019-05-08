@@ -1,8 +1,8 @@
 package ycm.mms.service.impl;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import ycm.mms.dao.UserMapper;
 import ycm.mms.model.User;
@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
     
-    @Transactional
 	@Override
 	public boolean addUser(User user) {
 		// TODO Auto-generated method stub
@@ -34,7 +33,6 @@ public class UserServiceImpl implements UserService {
     	return false;
 	}
 	
-	@Transactional
 	@Override
 	public boolean updateUser(int id, String userName, String nickName, int sex) {
 		// TODO Auto-generated method stub
@@ -57,14 +55,13 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 	
-	@Transactional
 	@Override
-	public boolean updateUserIcon(int id, String iconPath) {
+	public boolean updateUserIcon(int id, byte[] icon, String suffix) {
 		// TODO Auto-generated method stub
 		User user = userMapper.query(id);
 		if (user != null) {
-			
-			user.setIconPath(iconPath);
+			user.setIcon(icon);
+			user.setIconSuffix(suffix);
 			
 			int status = userMapper.updateIcon(user);
 			if (status == 1) {

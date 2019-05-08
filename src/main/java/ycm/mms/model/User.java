@@ -12,7 +12,8 @@ public class User {
     private int accountId;
     private String userName;
     private String nickName;
-    private String iconPath;
+    private byte[] icon;
+    private String iconSuffix;
     private int sex;
     private Timestamp createTime;
     private Timestamp modifyTime;
@@ -64,11 +65,17 @@ public class User {
 	public void setAccountId(int accountId) {
 		this.accountId = accountId;
 	}
-	public String getIconPath() {
-		return iconPath;
+	public byte[] getIcon() {
+		return icon;
 	}
-	public void setIconPath(String iconPath) {
-		this.iconPath = iconPath;
+	public void setIcon(byte[] icon) {
+		this.icon = icon;
+	}
+	public String getIconSuffix() {
+		return iconSuffix;
+	}
+	public void setIconSuffix(String iconSuffix) {
+		this.iconSuffix = iconSuffix;
 	}
     
 }
