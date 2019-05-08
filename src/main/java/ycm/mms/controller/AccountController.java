@@ -1,6 +1,8 @@
 package ycm.mms.controller;
 
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ycm.mms.model.Account;
-import ycm.mms.model.JSONResult;
 import ycm.mms.model.Session;
 import ycm.mms.model.User;
 import ycm.mms.security.RSAUtil;
@@ -36,44 +37,44 @@ public class AccountController {
     
     @RequestMapping(path="/verify", method=RequestMethod.GET)
     @ResponseBody
-    public JSONResult verifyAccount(@RequestParam("account") String account){
-    	JSONResult result = new JSONResult();
-    	if (account == null || account.equals("")) {
-    		result.setError("账号不能为空");
-    		return result;
+    public Map<String, Object> verifyAccount(@RequestParam("account") String account){
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	if (account == null || account.equals("")) {	
+    		map.put("error", "账号不能为空");
+    		return map;
     	}
     	
     	boolean status = accountService.verifyAccount(account);
-    	result.setSuccess(true);
-		result.setResult(status);
     	
-    	return result;
+		map.put("success", true);
+		map.put("status", status);
+		return map;
     }
     
     @RequestMapping(path="/register", method=RequestMethod.POST)
     @ResponseBody
-    public JSONResult register(@RequestParam("phone") String phone, 
+    public Map<String, Object> register(@RequestParam("phone") String phone, 
     		@RequestParam("password") String password, 
     		@RequestParam("user_name") String userName) {
     	
-    	JSONResult result = new JSONResult();
+    	Map<String, Object> map = new HashMap<String, Object>();
     	
     	if (!StringUtils.isMobile(phone)) {
-    		result.setError("不是有效的手机号");
-        	return result;
+    		map.put("error", "不是有效的手机号");
+    		return map;
     	}   	
     	if (password == null || password.equals("")) {
-    		result.setError("密码不能为空");
-        	return result;
+    		map.put("error", "密码不能为空");
+    		return map;
     	}
     	if (userName == null || userName.equals("")) {
-    		result.setError("用户名不能为空");
-        	return result;
+    		map.put("error", "用户名不能为空");
+    		return map;
     	}
     	boolean status = accountService.verifyAccount(phone);
     	if (status) {
-    		result.setError("账户已经存在");
-        	return result;
+    		map.put("error", "账户已经存在");
+    		return map;
     	}
     	
     	Account account = new Account();
@@ -86,19 +87,18 @@ public class AccountController {
     	status = accountService.register(account, user);
     	
     	if (!status) {
-    		result.setError("注册失败");
-        	return result;
+    		map.put("error", "注册失败");
+    		return map;
     	}
-    	
-    	result.setSuccess(true);
-    	result.setResult(user);
-    	return result;
+    	map.put("success", true);
+    	map.put("user", user);
+    	return map;
     }
     
     @RequestMapping(path="/login", method=RequestMethod.POST)
     @ResponseBody
-    public JSONResult login(@RequestParam("encryp_data") String encrypData){
-    	JSONResult result = new JSONResult();
+    public Map<String, Object> login(@RequestParam("encryp_data") String encrypData){
+    	Map<String, Object> map = new HashMap<String, Object>();
     	
     	encrypData = encrypData.replaceAll(" ", "+");
 		byte[] decodedData = Base64.getDecoder().decode(encrypData);
@@ -110,48 +110,47 @@ public class AccountController {
 			e.printStackTrace();
 		}
 		if (decryptData == null || decryptData.length == 0) {
-			result.setError("参数错误");
-        	return result;
+			map.put("error", "参数错误");
+    		return map;
 		}
 		String params = new String(decryptData);
 		
 		String account = StringUtils.getParamByUrl(params, "account");
 		String password = StringUtils.getParamByUrl(params, "password");
     	if (account == null || "".equals(account)) {
-        	result.setError("账号不能为空");
-        	return result;
+    		map.put("error", "账号不能为空");
+    		return map;
     	}
     	if (password == null || "".equals(password)) {
-    		result.setError("密码不能为空");
-        	return result;
+    		map.put("error", "密码不能为空");
+    		return map;
     	}
     	
     	Session session = accountService.login(account, password);
     	if (session == null) {
-    		result.setError("账号或密码错误");
-        	return result;
+    		map.put("error", "账号或密码错误");
+    		return map;
     	}
-    	
-    	result.setSuccess(true);
-    	result.setResult(session);
-    	return result;
+    	map.put("success", true);
+    	map.put("session", session);
+		return map;
     }
     
     @RequestMapping(path="/logout", method=RequestMethod.GET)
     @ResponseBody
-    public JSONResult logout(HttpSession httpSession){
-    	JSONResult result = new JSONResult();
+    public Map<String, Object> logout(HttpSession httpSession){
+    	Map<String, Object> map = new HashMap<String, Object>();
     	
     	Session session = (Session)httpSession.getAttribute("session");
     	
     	if (session != null && session.getAccountId() > 0) {
     		boolean status = accountService.logout(session.getAccountId());
-        	result.setSuccess(true);
-        	result.setResult(status);
+    		map.put("success", true);
+        	map.put("status", status);
     	} else {
-    		result.setError("未找到登录信息");
+    		map.put("error", "未找到登录信息");
     	}
  
-    	return result;
+    	return map;
     }
 }

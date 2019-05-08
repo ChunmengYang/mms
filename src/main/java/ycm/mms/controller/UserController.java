@@ -1,8 +1,9 @@
 package ycm.mms.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import ycm.mms.model.JSONResult;
 import ycm.mms.model.Session;
 import ycm.mms.model.User;
 import ycm.mms.service.UserService;
@@ -46,43 +46,47 @@ public class UserController {
     
     @RequestMapping(path="/update", method=RequestMethod.POST)
     @ResponseBody
-    public JSONResult updateUserName(@RequestParam("id") int id, @RequestParam("user_name") String userName, @RequestParam("nick_name") String nickName, @RequestParam("sex") int sex){
-    	JSONResult result = new JSONResult();
+    public Map<String, Object> updateUserName(@RequestParam("id") int id, @RequestParam("user_name") String userName, @RequestParam("nick_name") String nickName, @RequestParam("sex") int sex){
+    	Map<String, Object> map = new HashMap<String, Object>();
     	if (id == 0) {
-    		result.setError("用户ID不能为空");
-    		return result;
+    		map.put("error", "用户ID不能为空");
+    		return map;
     	}
     	
     	boolean status = userService.updateUser(id, userName, nickName, sex);
     	if (!status) {
-    		result.setError("更新用户信息失败");
-    		return result;
+    		map.put("error", "更新用户信息失败");
+    		return map;
     	}
     	
     	User user = userService.getUser(id);
-		result.setSuccess(true);
-		result.setResult(user);
-		return result;
+    	    
+        map.put("success", true);
+        map.put("user", user);
+        
+		return map;
     }
     
     @RequestMapping(path="/{id}", method=RequestMethod.GET)
     @ResponseBody
-    public JSONResult getPerson(@PathVariable("id") int id){
-    	JSONResult result = new JSONResult();
+    public Map<String, Object> getPerson(@PathVariable("id") int id){
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
     	if (id == 0) {
-    		result.setError("用户ID不能为空");
-    		return result;
+    		map.put("error", "用户ID不能为空");
+    		return map;
     	}
     	
         User user = userService.getUser(id);
         if (user == null) {
-        	result.setError("用户不存在");
-    		return result;
+        	map.put("error", "用户不存在");
+    		return map;
         }
+
+        map.put("success", true);
+        map.put("user", user);
         
-        result.setSuccess(true);
-        result.setResult(user);
-        return result;
+        return map;
     }
     
     @RequestMapping(path="/icon/download", method=RequestMethod.GET)
@@ -113,8 +117,8 @@ public class UserController {
     
     @RequestMapping(path="/icon/upload", method=RequestMethod.POST)
     @ResponseBody
-    public JSONResult iconUpload(HttpServletRequest request,HttpSession httpSession) {
-    	JSONResult result = new JSONResult();
+    public Map<String, Object> iconUpload(HttpServletRequest request,HttpSession httpSession) {
+    	Map<String, Object> map = new HashMap<String, Object>();
     	
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         if (multipartResolver != null && multipartResolver.isMultipart(request)) {
@@ -131,8 +135,8 @@ public class UserController {
                     	continue;
                     }
                     if (!StringUtils.checkImageFileSuffix(fileName)) {
-                    	result.setError("上传的头像不是图片类型");
-						return result; 
+                    	map.put("error", "上传的头像不是图片类型");
+                		return map;
                     }
                     
                     Session session = (Session)httpSession.getAttribute("session");
@@ -145,33 +149,34 @@ public class UserController {
     						try {
 								boolean status = userService.updateUserIcon(user.getId(), file.getBytes(), suffix);
 								if (status) {
-									result.setSuccess(true);
-		    			            return result; 
+									map.put("success", true);
+			                		return map;
 								} else {
-									result.setError("保存头像失败");
-		                            return result; 
+									map.put("error", "保存头像失败");
+			                		return map;
 								}
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-								result.setError("保存头像失败");
-	                            return result; 
+								map.put("error", "保存头像失败");
+		                		return map; 
 							} 
                     	} else {
-                    		result.setError("用户未登录");
-                            return result; 
+                    		map.put("error", "用户未登录");
+	                		return map;
                     	}
                     } else {
-                    	result.setError("用户未登录");
-                        return result; 
+                    	map.put("error", "用户未登录");
+                		return map;
                     }
                 }
             }
-            result.setError("未找到上传的图片");
-            return result; 
+            
+            map.put("error", "未找到上传的头像");
+    		return map;
         }
         
-        result.setError("未找到上传的图片");
-        return result;
+        map.put("error", "未找到上传的头像");
+		return map;
     }
 }
