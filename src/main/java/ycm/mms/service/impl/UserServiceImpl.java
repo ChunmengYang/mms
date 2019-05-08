@@ -83,4 +83,10 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return userMapper.queryByAccountId(accountId);
 	}
+
+	@Override
+	public User getUserIconByAccountId(int accountId) {
+		// TODO Auto-generated method stub
+		return userMapper.queryIconByAccountId(accountId);
+	}
 }

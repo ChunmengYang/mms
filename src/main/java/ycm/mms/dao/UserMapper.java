@@ -15,4 +15,6 @@ public interface UserMapper {
    User query(int id);
    
    User queryByAccountId(int accountId);
+   
+   User queryIconByAccountId(int accountId);
 }

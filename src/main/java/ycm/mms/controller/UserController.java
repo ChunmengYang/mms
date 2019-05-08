@@ -93,7 +93,7 @@ public class UserController {
     public ResponseEntity<byte[]> iconDownload(HttpSession httpSession)  throws IOException{
     	Session session = (Session)httpSession.getAttribute("session");
         if (session != null && session.getAccountId() > 0) {
-        	User user = userService.getUserByAccountId(session.getAccountId());
+        	User user = userService.getUserIconByAccountId(session.getAccountId());
         	if (user != null && user.getId() > 0) {
         		byte[] icon = user.getIcon();
         		String suffix = user.getIconSuffix();

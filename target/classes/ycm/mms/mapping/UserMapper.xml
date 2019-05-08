@@ -35,10 +35,14 @@
     </select>
     
     <select id="query" parameterType="int" resultMap="UserResult" >  
-        select * from user  where id = #{id}
+        select id, account_id, user_name, nick_name, sex, create_time, modify_time from user  where id = #{id}
     </select>
     
     <select id="queryByAccountId" parameterType="int" resultMap="UserResult" >  
-        select * from user  where account_id = #{accountId}
+        select id, account_id, user_name, nick_name, sex, create_time, modify_time from user  where account_id = #{accountId}
+    </select>
+    
+    <select id="queryIconByAccountId" parameterType="int" resultMap="UserResult" >  
+        select id, icon, icon_suffix from user  where account_id = #{accountId}
     </select>
 </mapper>

@@ -2,6 +2,8 @@ package ycm.mms.model;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 账户实体
  * @author Chunmeng
@@ -10,6 +12,7 @@ public class Account {
 
     private int id;
     private String loginName;
+    @JsonIgnore
     private String password;
     private String phone;
     private String email;

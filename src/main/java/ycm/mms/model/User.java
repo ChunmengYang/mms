@@ -2,17 +2,22 @@ package ycm.mms.model;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 用户信息实体
  * @author Chunmeng
  */
+
 public class User {
 
     private int id;
     private int accountId;
     private String userName;
     private String nickName;
+    @JsonIgnore
     private byte[] icon;
+    @JsonIgnore
     private String iconSuffix;
     private int sex;
     private Timestamp createTime;

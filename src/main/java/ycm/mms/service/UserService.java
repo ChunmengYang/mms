@@ -9,5 +9,6 @@ public interface UserService {
 	boolean updateUserIcon(int id, byte[] icon, String suffix);
 	User getUser(int id);
 	User getUserByAccountId(int accountId);
+	User getUserIconByAccountId(int accountId);
 
 }
