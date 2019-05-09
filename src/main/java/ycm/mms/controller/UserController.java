@@ -1,11 +1,16 @@
 package ycm.mms.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +118,85 @@ public class UserController {
         	}
         }
 		return null;
+    }
+    
+    @RequestMapping(path="/icon/downloadbyim", method=RequestMethod.GET)
+    public void iconDownloadByInputStream(HttpServletResponse response, HttpSession httpSession)  throws IOException{
+    	Session session = (Session)httpSession.getAttribute("session");
+        if (session != null && session.getAccountId() > 0) {
+        	User user = userService.getUserIconByAccountId(session.getAccountId());
+        	if (user != null && user.getId() > 0) {
+        		byte[] icon = user.getIcon();
+        		String suffix = user.getIconSuffix();
+        		if (icon != null && icon.length > 0) {
+        			if (suffix == null || "".equals(suffix)) {
+        				suffix = "jpg";
+        			}
+        			String filename =  user.getId() + "." + suffix;
+        		    response.reset();  
+        		    response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");  
+        		    response.addHeader("Content-Length", "" + icon.length);  
+        		    response.setContentType("application/octet-stream;charset=UTF-8");  
+        		    OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());  
+        		    outputStream.write(icon);  
+        		    outputStream.flush();  
+        		    outputStream.close();  
+        		}
+        	}
+        }
+    }
+    
+    @RequestMapping(path="/icon/uploadbyim", method=RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> iconUploadByInputStream(HttpServletRequest request, HttpSession httpSession) {
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	try {
+			Session session = (Session)httpSession.getAttribute("session");
+            if (session != null && session.getAccountId() > 0) {
+            	ServletInputStream im = request.getInputStream();
+    			String contentType = request.getContentType().toLowerCase();
+
+    			ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+    			
+    			byte[] buff = new byte[1024];
+    			int rc = 0; 
+    			while ((rc = im.read(buff, 0, 100)) > 0) { 
+    				swapStream.write(buff, 0, rc); 
+    			} 
+    			byte[] in_b = swapStream.toByteArray(); 
+    			
+            	User user = userService.getUserByAccountId(session.getAccountId());
+            	if (user != null && user.getId() > 0) {
+            		
+            		String suffix = "jpg";
+            		if (contentType.indexOf("image/png") != -1) {
+            			suffix = "png";
+            		}
+
+					boolean status = userService.updateUserIcon(user.getId(), in_b, suffix);
+					if (status) {
+						map.put("success", true);
+						return map;
+					} else {
+						map.put("error", "保存头像失败");
+						return map;
+					} 
+            	} else {
+            		map.put("error", "用户未登录");
+            		return map;
+            	}
+            } else {
+            	map.put("error", "用户未登录");
+        		return map;
+            }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        map.put("error", "未找到上传的头像");
+		return map;
     }
     
     @RequestMapping(path="/icon/upload", method=RequestMethod.POST)
