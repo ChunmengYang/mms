@@ -105,11 +105,11 @@ public class AccountServiceImpl implements AccountService {
 		if (account != null && account.getId() != 0 && MD5Utils.encode(password).equals(account.getPassword())) {
 			//生成SESSION
 			long nowDate = new java.util.Date().getTime();
-			Timestamp expiredTime = new Timestamp(nowDate + 86400000);
+			Timestamp time = new Timestamp(nowDate);
 			
 			Session session = sessionMapper.queryByAccountId(account.getId());
 			if (session != null && session.getId() != 0) {
-				session.setExpiredTime(expiredTime);
+				session.setCreateTime(time);
 				int status = sessionMapper.update(session);
 				if (status != 0) {
 					return session;
@@ -118,7 +118,7 @@ public class AccountServiceImpl implements AccountService {
 				session = new Session();
 				session.setAccountId(account.getId());
 				session.setSign(StringUtils.random(32));
-				session.setExpiredTime(expiredTime);
+				session.setCreateTime(time);
 				int status = sessionMapper.insert(session);
 				if (status != 0) {
 					return session;
@@ -133,9 +133,9 @@ public class AccountServiceImpl implements AccountService {
 		Session session = sessionMapper.queryBySign(sign);
 		if (session != null && session.getId() != 0) {
 			long nowDate = new java.util.Date().getTime();
-			Timestamp expiredTime = new Timestamp(nowDate + 86400000);
+			Timestamp time = new Timestamp(nowDate);
 			
-			session.setExpiredTime(expiredTime);
+			session.setCreateTime(time);
 			int status = sessionMapper.update(session);
 			if (status != 0) {
 				return session;
@@ -153,5 +153,13 @@ public class AccountServiceImpl implements AccountService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void deleteExpiredSession(long time) {
+		// TODO Auto-generated method stub
+		long nowDate = new java.util.Date().getTime();
+		Timestamp expiredTime = new Timestamp(nowDate - time);
+		sessionMapper.deleteExpired(expiredTime);
 	}
 }

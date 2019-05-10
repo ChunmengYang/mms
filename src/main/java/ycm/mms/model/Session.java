@@ -6,7 +6,7 @@ public class Session {
 	private int id;
     private int accountId;
     private String sign;
-    private Timestamp expiredTime;
+    private Timestamp createTime;
     
     public int getId() {
         return id;
@@ -26,11 +26,11 @@ public class Session {
 	public void setSign(String sign) {
 		this.sign = sign;
 	}
-	public Timestamp getExpiredTime() {
-		return expiredTime;
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
-	public void setExpiredTime(Timestamp expiredTime) {
-		this.expiredTime = expiredTime;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
-	 
+ 
 }

@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
     xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:task="http://www.springframework.org/schema/task"
     xsi:schemaLocation="http://www.springframework.org/schema/beans 
      http://www.springframework.org/schema/beans/spring-beans.xsd
      http://www.springframework.org/schema/context
@@ -9,15 +10,24 @@
      http://www.springframework.org/schema/aop
      http://www.springframework.org/schema/aop/spring-aop.xsd
      http://www.springframework.org/schema/tx 
-     http://www.springframework.org/schema/tx/spring-tx.xsd">
+     http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 	
 	<!-- 启用spring注解 -->
     <context:annotation-config />
     
-    <!-- 设置使用注解的类所在的jar包, 自动扫描实现自动注入 -->
+    <!-- 自动扫描实现自动注入 -->
     <context:component-scan base-package="ycm.mms.service.impl" />
     
     <!-- 启用对AOP的支持 -->
 	<aop:aspectj-autoproxy />
 	<context:component-scan base-package="ycm.mms.aop" />
+	
+	<!-- 启用Task注解支持 -->
+	<task:annotation-driven />
+	<!-- 自动扫描实现自动注入 -->
+	<context:component-scan base-package="ycm.mms.task" />
+	
+	<bean id="springContextHolder" class="ycm.mms.util.SpringContextHolder" lazy-init="false"/>
 </beans>

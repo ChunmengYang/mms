@@ -104,7 +104,7 @@ public class AccountController {
 		byte[] decodedData = Base64.getDecoder().decode(encrypData);
 		byte[] decryptData = null;
 		try {
-			decryptData = RSAUtil.decryptByPrivateKey(decodedData, RSAUtil.PWD_PRIVATEKEY);
+			decryptData = RSAUtil.decryptByPrivateKey(decodedData, RSAUtil.API_PRIVATEKEY);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

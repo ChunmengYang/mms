@@ -28,7 +28,7 @@
 		}
 		
 		var encrypt = new JSEncrypt();
-		encrypt.setPublicKey(JSSign.pwdPublicKey);
+		encrypt.setPublicKey(JSSign.APIPublicKey);
 		var url = "account=" + account + "&password=" + password;
 		var encryptData = encrypt.encrypt(url);
 		$("#encryp_data").val(encryptData);

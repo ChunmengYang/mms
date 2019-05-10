@@ -15,4 +15,6 @@ public interface AccountService {
 	boolean logout(int accountId);
 	
 	Session checkSession(String sign);
+	
+	void deleteExpiredSession(long time);
 }

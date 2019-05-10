@@ -65,7 +65,7 @@ CREATE TABLE `session` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID，自增长',
   `account_id` int(11) NOT NULL COMMENT '账号ID',
   `sign` varchar(32) NOT NULL COMMENT '签名',
-  `expired_time` timestamp NOT NULL COMMENT '过期时间',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 

@@ -6,23 +6,27 @@
 		<id property="id" column="id"/>
         <result property="accountId" column="account_id"/>
         <result property="sign" column="sign"/>
-        <result property="expiredTime" column="expired_time"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
     
 	<insert id="insert" parameterType="Session">
-		 insert into session (account_id, sign, expired_time)
-		 values (#{accountId}, #{sign}, #{expiredTime})
+		 insert into session (account_id, sign, create_time)
+		 values (#{accountId}, #{sign}, #{createTime})
 		 <selectKey resultType="java.lang.Integer" keyProperty="id" >
             SELECT @@IDENTITY AS ID
          </selectKey>
 	</insert>
 	
 	<update id="update" parameterType="Session">  
-        update session set expired_time = #{expiredTime}  where id = #{id}
+        update session set create_time = #{createTime}  where id = #{id}
     </update>
     
     <delete id="delete" parameterType="int">  
         delete from session  where account_id = #{accountId}
+    </delete>
+    
+    <delete id="deleteExpired" parameterType="java.sql.Timestamp">
+    	delete from session where create_time &lt;= #{time}
     </delete>
     
     <select id="queryByAccountId" parameterType="int" resultMap="SessionResult" >  
