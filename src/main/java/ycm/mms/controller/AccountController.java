@@ -1,6 +1,5 @@
 package ycm.mms.controller;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ycm.mms.model.Account;
 import ycm.mms.model.Session;
 import ycm.mms.model.User;
+import ycm.mms.security.Base64Utils;
 import ycm.mms.security.RSAUtil;
 import ycm.mms.service.AccountService;
 import ycm.mms.util.MD5Utils;
@@ -101,13 +101,15 @@ public class AccountController {
     	Map<String, Object> map = new HashMap<String, Object>();
     	
     	encrypData = encrypData.replaceAll(" ", "+");
-		byte[] decodedData = Base64.getDecoder().decode(encrypData);
-		byte[] decryptData = null;
+    	byte[] decryptData = null;
 		try {
+			byte[] decodedData = Base64Utils.decode(encrypData);
 			decryptData = RSAUtil.decryptByPrivateKey(decodedData, RSAUtil.API_PRIVATEKEY);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			map.put("error", "解码错误");
+    		return map;
 		}
 		if (decryptData == null || decryptData.length == 0) {
 			map.put("error", "参数错误");

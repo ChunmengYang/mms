@@ -7,14 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Base64;
 
 /**
 * <p>
 * BASE64编码解码工具包
-* </p>
-* <p>
-* 依赖javabase64-1.3.1.jar
 * </p>
 * 
 * @author IceWee
@@ -39,7 +35,7 @@ public class Base64Utils {
     * @throws Exception
     */
    public static byte[] decode(String base64) throws Exception {
-       return Base64.getDecoder().decode(base64.getBytes());
+	   return ycm.mms.security.Base64.decode(base64);
    }
    
    /**
@@ -52,7 +48,7 @@ public class Base64Utils {
     * @throws Exception
     */
    public static String encode(byte[] bytes) throws Exception {
-       return new String(Base64.getEncoder().encode(bytes));
+	   return ycm.mms.security.Base64.encode(bytes);
    }
    
    /**

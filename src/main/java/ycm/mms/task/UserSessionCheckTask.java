@@ -10,7 +10,7 @@ import ycm.mms.util.SpringContextHolder;
 @Component
 public class UserSessionCheckTask {
 
-	// 每天执行一次
+	// 24小时执行一次
 	@Scheduled(fixedDelay = 86400000)
 	public void taskCycle() {
 		System.out.println("========UserSessionCheckTask Start========");
