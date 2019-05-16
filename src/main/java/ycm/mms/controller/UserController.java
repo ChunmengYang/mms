@@ -49,6 +49,50 @@ public class UserController {
         this.userService = userService;
     }
     
+    @RequestMapping(path="", method=RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getLoginUser(HttpSession httpSession) {
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	Session session = (Session)httpSession.getAttribute("session");
+        if (session != null && session.getAccountId() > 0) {
+        	User user = userService.getUserByAccountId(session.getAccountId());
+        	if (user != null && user.getId() > 0) {
+        		map.put("success", true);
+                map.put("user", user);
+                
+                return map;
+        	} else {
+        		map.put("error", "未找到用户信息");
+        	}
+        }
+        map.put("error", "未找到登录用户");
+        
+        return map;
+    }
+    
+    @RequestMapping(path="/{id}", method=RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getUser(@PathVariable("id") int id){
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	if (id == 0) {
+    		map.put("error", "用户ID不能为空");
+    		return map;
+    	}
+    	
+        User user = userService.getUser(id);
+        if (user == null) {
+        	map.put("error", "用户不存在");
+    		return map;
+        }
+
+        map.put("success", true);
+        map.put("user", user);
+        
+        return map;
+    }
+    
     @RequestMapping(path="/update", method=RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> updateUserName(@RequestParam("id") int id, @RequestParam("user_name") String userName, @RequestParam("nick_name") String nickName, @RequestParam("sex") int sex){
@@ -70,28 +114,6 @@ public class UserController {
         map.put("user", user);
         
 		return map;
-    }
-    
-    @RequestMapping(path="/{id}", method=RequestMethod.GET)
-    @ResponseBody
-    public Map<String, Object> getPerson(@PathVariable("id") int id){
-    	Map<String, Object> map = new HashMap<String, Object>();
-    	
-    	if (id == 0) {
-    		map.put("error", "用户ID不能为空");
-    		return map;
-    	}
-    	
-        User user = userService.getUser(id);
-        if (user == null) {
-        	map.put("error", "用户不存在");
-    		return map;
-        }
-
-        map.put("success", true);
-        map.put("user", user);
-        
-        return map;
     }
     
     @RequestMapping(path="/icon/download", method=RequestMethod.GET)

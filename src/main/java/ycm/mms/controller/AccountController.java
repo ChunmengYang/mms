@@ -138,7 +138,7 @@ public class AccountController {
 		return map;
     }
     
-    @RequestMapping(path="/logout", method=RequestMethod.GET)
+    @RequestMapping(path="/logout", method=RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> logout(HttpSession httpSession){
     	Map<String, Object> map = new HashMap<String, Object>();
